@@ -2,7 +2,7 @@ import MySQLdb
 
 DB_HOST = 'localhost' 
 DB_USER = 'root' 
-DB_PASS = 'lucas1234+' 
+DB_PASS = 'contraseña' 
 DB_NAME = 'gestor_universitario' 
 
 def run_query(query=''): 
