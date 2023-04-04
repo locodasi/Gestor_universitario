@@ -848,7 +848,7 @@ def ventanaDeMostrar(titulo, lista):
 def enviarEmailDeIngreso(mail,materia,carrera,alumno):
 
     #Podes poner tanto homtial,como gmail, etc
-    remitente = "tuMail@hotmail.com"
+    remitente = "TuMail@hotmail.com"
     destinatario = mail
     mensaje = ""
     if len(materia) == 1:
@@ -883,13 +883,13 @@ def enviarEmailDeIngreso(mail,materia,carrera,alumno):
     #lo mismo con el puerto, dependera que uses
     smtp = smtplib.SMTP("smtp-mail.outlook.com", port=587)
     smtp.starttls()
-    smtp.login(remitente, "tuContraMail")
+    smtp.login(remitente, "TuContra")
     smtp.sendmail(remitente, destinatario, email.as_string())
     smtp.quit()
     
 def enviarEmailDeBaja(mail,materia,carrera,alumno):
 
-    remitente = "tuMail@hotmail.com"
+    remitente = "Tumail@hotmial.com"
     destinatario = mail
     mensaje = ""
     
@@ -922,7 +922,7 @@ def enviarEmailDeBaja(mail,materia,carrera,alumno):
     email.set_content(mensaje)
     smtp = smtplib.SMTP("smtp-mail.outlook.com", port=587)
     smtp.starttls()
-    smtp.login(remitente, "tuContraMail")
+    smtp.login(remitente, "TuContra")
     smtp.sendmail(remitente, destinatario, email.as_string())
     smtp.quit()
     

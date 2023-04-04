@@ -6,9 +6,9 @@ from tkinter import messagebox as MessageBox
 import MiExcepcion
 import ConectorBD
 import Ayudadores as ayuda
-import Ventanas_de_admin.VentanaDeCargaDeMaterias as ventanaMaterias      
-import VentanasDeAlumnos.VentanaDeMaterias as ventanaAlumno  
-import VentanasDeDocentes.VentanaDeNotas as ventanaDocente
+from Ventanas_de_admin.VentanaDeCargaDeMaterias import VentanaDeAltasDeMaterias     
+from VentanasDeAlumnos.VentanaDeMaterias import VentanaDeMaterias
+from VentanasDeDocentes.VentanaDeNotas import VentanaDeNotas
 
 class VentanaPrincipal(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -66,7 +66,7 @@ class VentanaPrincipal(tk.Tk):
                     
                 if len(datos) == 1:
                                        
-                    self.ventanaAlumno = ventanaAlumno.VentanaDeMaterias(padre=self,ingresante=f"{datos[0][2]},{datos[0][1]} Legajo: {datos[0][0]}", id=datos[0][0])
+                    self.ventanaAlumno = VentanaDeMaterias(padre=self,ingresante=f"{datos[0][2]},{datos[0][1]} Legajo: {datos[0][0]}", id=datos[0][0])
                     self.limpiar()
                     self.withdraw()
                     
@@ -82,12 +82,12 @@ class VentanaPrincipal(tk.Tk):
                 if len(datos) == 1:
                     
                     if datos[0][0] == 1:
-                        self.ventanaAdmin = ventanaMaterias.VentanaDeAltasDeMaterias(padre=self,ingresante=datos[0][1])
+                        self.ventanaAdmin = VentanaDeAltasDeMaterias(padre=self,ingresante=datos[0][1])
                         self.limpiar()
                         self.withdraw()
 
                     else:
-                        self.ventanaDocente = ventanaDocente.VentanaDeNotas(padre=self,ingresante=f"{datos[0][2]},{datos[0][1]} ID: {datos[0][0]}",id=datos[0][0])
+                        self.ventanaDocente = VentanaDeNotas(padre=self,ingresante=f"{datos[0][2]},{datos[0][1]} ID: {datos[0][0]}",id=datos[0][0])
                         self.limpiar()
                         self.withdraw()
 

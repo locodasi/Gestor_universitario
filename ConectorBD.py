@@ -2,7 +2,7 @@ import MySQLdb
 
 DB_HOST = 'localhost' 
 DB_USER = 'root' 
-DB_PASS = 'lucas1234+' 
+DB_PASS = 'contra' 
 DB_NAME = 'gestor_universitario' 
 
 def run_query(query=''): 
@@ -14,9 +14,9 @@ def run_query(query=''):
     if query.upper().startswith('SELECT'): 
         data = cursor.fetchall()   # Traer los resultados de un select 
     
-    elif query.upper().startswith('INSERT'): #Devuelve el id del dato ingresado
+    elif query.upper().startswith('INSERT'): 
         conn.commit()
-        data = cursor.lastrowid 
+        data = cursor.lastrowid #Devuelve el id del dato ingresado
     else: 
         
         conn.commit()              # Hacer efectiva la escritura de datos 

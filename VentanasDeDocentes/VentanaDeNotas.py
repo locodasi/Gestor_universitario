@@ -5,8 +5,8 @@ from tkinter import messagebox as MessageBox
 
 
 
-import sys
-sys.path.append('D:\\escritorio\\Python\\Sistema_de_gestor_universitario')
+# import sys
+# sys.path.append('D:\\escritorio\\Python\\Sistema_de_gestor_universitario')
 
 import Ayudadores as ayuda
 import ConectorBD

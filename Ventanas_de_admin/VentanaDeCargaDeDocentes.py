@@ -8,9 +8,8 @@ import re
 import MiExcepcion
 import ConectorBD
 import Ayudadores as ayuda
-import Ventanas_de_admin.VentanaDeCargaDeMaterias as VentanaDeCargaDeMaterias
-import Ventanas_de_admin.VentanaDeCargaDeAlumnos as VentanaDeCargaDeAlumnos
-import Ventanas_de_admin.VentanaDeCargaDeCarreras as VentanaDeCargaDeCarreras
+
+
 
 
 class VentanaDeAltasDeDocentes(tk.Toplevel):
@@ -31,6 +30,9 @@ class VentanaDeAltasDeDocentes(tk.Toplevel):
         
         self.bind_all("<Control-c>", self.ventanaCarreras)
         menu_ventanas.add_command(label= "Carreras", accelerator="Ctrl+c", command=self.ventanaCarreras)  
+       
+        self.bind_all("<Control-g>", self.ventanaGraficos)
+        menu_ventanas.add_command(label= "Graficos", accelerator="Ctrl+g", command=self.ventanaGraficos)  
        
         menu_ventanas.add_separator()
 
@@ -249,15 +251,27 @@ class VentanaDeAltasDeDocentes(tk.Toplevel):
         self.padre.destroy()
     
     def ventanaMaterias(self, event=None):
-        self.ventanaDeDocente = VentanaDeCargaDeMaterias.VentanaDeAltasDeMaterias(ingresante=self.ingresante, padre=self.padre)
+        from Ventanas_de_admin.VentanaDeCargaDeMaterias import VentanaDeAltasDeMaterias
+        
+        self.ventanaDeDocente = VentanaDeAltasDeMaterias(ingresante=self.ingresante, padre=self.padre)
         self.destroy()
         
     def ventanaAlumnos(self, event=None):
-        self.ventanaDeDocente = VentanaDeCargaDeAlumnos.VentanaDeAltasDeAlumnos(ingresante=self.ingresante, padre=self.padre)
+        from Ventanas_de_admin.VentanaDeCargaDeAlumnos import VentanaDeAltasDeAlumnos
+        
+        self.ventanaDeDocente = VentanaDeAltasDeAlumnos(ingresante=self.ingresante, padre=self.padre)
         self.destroy()
     
     def ventanaCarreras(self, event=None):
-        self.ventanaDeCarreras = VentanaDeCargaDeCarreras.VentanaDeCargaDeCarreras(ingresante=self.ingresante, padre=self.padre)
+        from Ventanas_de_admin.VentanaDeCargaDeCarreras import VentanaDeCargaDeCarreras
+
+        self.ventanaDeCarreras = VentanaDeCargaDeCarreras(ingresante=self.ingresante, padre=self.padre)
+        self.destroy()
+    
+    def ventanaGraficos(self, event=None):
+        from Ventanas_de_admin.VentanaGraficos import VentanaGraficos
+        
+        self.ventanaGraficos = VentanaGraficos(ingresante=self.ingresante, padre=self.padre)
         self.destroy()
     
     def limpiar(self):
