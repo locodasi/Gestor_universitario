@@ -202,7 +202,6 @@ class VentanaDeAltasDeMaterias(tk.Toplevel):
                 
             query = f"""select m.id, m.nombre, m.dia, m.desde, m.hasta, d.nombre, d.apellido, c.nombre
                     from materias m inner join docentes d on m.id_docente = d.id inner join carreras c on m.id_carrera = c.id
-                    where m.id > 1
                     order by m.id"""
                     
             try:
@@ -233,7 +232,6 @@ class VentanaDeAltasDeMaterias(tk.Toplevel):
         
         query = f"""select m.id, m.nombre, m.dia, m.desde, m.hasta, d.nombre, d.apellido, c.nombre
                 from materias m inner join docentes d on m.id_docente = d.id inner join carreras c on m.id_carrera = c.id
-                where m.id > 1
                 order by m.id"""
                 
         try:

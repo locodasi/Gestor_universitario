@@ -721,6 +721,7 @@ class VentanaDeNotas(tk.Toplevel):
                 "Error al ejecutar la query")
             
     def aprobar(self):
+        #Tengo que agregar que elimine de la tabla alumno_materia el registro de este alumno con esta materia aprobada, (Ademas si se gradua, tengo que hacer lo mismo con alumno_carrera, eliminando al alumno de su carrera graduada y todas las alumno_materias de ese alumno en cualquier materia de esa carrea [Talvez crear tabla graduados, con alumno y carrera])
         query = f"update alumnos_materias set estado = 'Aprobada' where id_alumno = {self.idAlumno} and id_materia = {self.idMateria}"
         
         try:

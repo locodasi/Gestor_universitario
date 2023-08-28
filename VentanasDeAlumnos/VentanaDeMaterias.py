@@ -122,8 +122,14 @@ class VentanaDeMaterias(tk.Toplevel):
             
     def obtenerMaterias(self,evento=None):
         
-        query = f"""select m.id, m.nombre, am.estado
-                from materias m inner join carreras c on m.id_carrera = c.id left join alumnos_materias am on am.id_materia = m.id 
+        #Esta mal, no solo el inner join es inecesario, si no que si tengo mas alumnos anotados a las materias, entonces me daria un resultado amyor con materias repetidas
+        # query = f"""select m.id, m.nombre, am.estado
+        #         from materias m inner join carreras c on m.id_carrera = c.id left join alumnos_materias am on am.id_materia = m.id 
+        #         where m.id_carrera = {self.obtenerIdCarrera()}"""
+        
+        #obtengo todas las materias de la carrera
+        query = f"""select m.id, m.nombre
+                from materias m 
                 where m.id_carrera = {self.obtenerIdCarrera()}"""
                 
         try:
@@ -134,9 +140,15 @@ class VentanaDeMaterias(tk.Toplevel):
             listaCursando = []
             listaAprobada = []
             
+            
             for dato in datos:
                 
-                if dato[2] == None:
+                #Obtengo el esatado de la materia, si no retorna nada, es porque nunca la curse ni la aprobe
+                query=f"""SELECT estado
+                FROM alumnos_materias
+                WHERE id_alumno = {self.id} AND id_materia = {dato[0]}"""
+                estado = ConectorBD.run_query(query=query)
+                if len(estado) == 0:
                     
                     id = str(dato[0])
                     
@@ -150,26 +162,35 @@ class VentanaDeMaterias(tk.Toplevel):
                         listaMaterias.append(f"{ayuda.formatoConCeros(str(dato[0]),5)} {dato[1]}")
                     else:
                         
+                        #Muy ineficiente y compleja
                         
-                        #Esta es la base para pedir la correlativas del alumno
-                        query = f"""select m.id, m.nombre
-                                from materias m inner join alumnos_materias am on am.id_materia = m.id inner join correlativas co on co.id_correlativa = m.id
-                                where am.id_alumno = {self.id} and """
+                        # #Esta es la base para pedir la correlativas del alumno
+                        # query = f"""select m.id, m.nombre
+                        #         from materias m inner join alumnos_materias am on am.id_materia = m.id inner join correlativas co on co.id_correlativa = m.id
+                        #         where am.id_alumno = {self.id} and m.id_carrera = {self.obtenerIdCarrera()} and """
                         
-                        #Recorro la lista de las correlatibas y las voy agregando a la query
-                        #La idea es que yo estoy pidiendo que me traigan si tengo la correlativa aprobada
-                        #por eso recorro las listas de correlativas y las voy agregando al where
-                        #pero lo hago entre () y or asi si alguno no la tengo aun asi me trae las que si
-                        #siempre del mismo alumno, por que antes lo pusimos where am.id_alumno = {self.id}
-                        for corre in correlativas:
-                            query += f"(co.id_correlativa = {corre[0]} and am.estado = 'Aprobada') or "
+                        # #Recorro la lista de las correlatibas y las voy agregando a la query
+                        # #La idea es que yo estoy pidiendo que me traigan si tengo la correlativa aprobada
+                        # #por eso recorro las listas de correlativas y las voy agregando al where
+                        # #pero lo hago entre () y or asi si alguno no la tengo aun asi me trae las que si
+                        # #siempre del mismo alumno, por que antes lo pusimos where am.id_alumno = {self.id}
+                        # for corre in correlativas:
+                        #     query += f"(co.id_correlativa = {corre[0]} and am.estado = 'Aprobada') or "
                         
-                        #Elimino el ultimo for
-                        query = query[:-3]
+                        # #Elimino el ultimo or del ultimo for
+                        # query = query[:-3]
                         
-                        query += """
-                                 group by m.id"""
+                        # query += """
+                        #          group by m.id"""
                         
+                        #mejor asi
+                        #En esta consulta el from me esta dando todas las querys de alumno_materia que sean materias que son correlativas de alguien
+                        #Luego el where lo que hace, priemro) darme solo las que sean de mi alumno, por lo que ahora me daria los alumnos_materias de materias que sean correlativas de otro y que sean cursadas o hayan sido cursadas por mi.       2) darme aquellas materias que le hagan la correlativa a la materia que estoy buscando, por lo que ahora la tabla seria, alumno_materias de las de mi usuario y que le hagan correlativa a esta materia.                        3) que esten aprobadas, osea, aquellas alumno_materia, que le hagan la correlativa a mi materia y esten aprobadas.
+                        #De esta manera lo que me retorna serian aquellas materias aprobadas por mi alumno que son correlativas a la materia que busco
+                        query = f"""select *
+                            from alumnos_materias am inner join correlativas co on co.id_correlativa = am.id_materia
+                            where am.id_alumno = {self.id} and co.id_materia = {id} and am.estado = 'Aprobada'"""
+           
                         correlativasAprobadas = ConectorBD.run_query(query=query)
                         
                         #Si la cantidad que tengo aprobada es la misma que de correlativas que necesita
@@ -178,10 +199,10 @@ class VentanaDeMaterias(tk.Toplevel):
                             listaMaterias.append(f"{ayuda.formatoConCeros(str(dato[0]),5)} {dato[1]}")
                         
                         
-                elif dato[2] == "Cursando":
+                elif estado[0][0] == "Cursando":
                     listaCursando.append(f"{ayuda.formatoConCeros(str(dato[0]),5)} {dato[1]}")
                 
-                elif dato[2] == "Aprobada":
+                elif estado[0][0] == "Aprobada":
                     listaAprobada.append(f"{ayuda.formatoConCeros(str(dato[0]),5)} {dato[1]}")
             
             self.listboxMaterias.delete(0,tk.END)
